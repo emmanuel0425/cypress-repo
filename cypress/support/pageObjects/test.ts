@@ -60,6 +60,15 @@ class Test {
       const regionsTotal = $elements.length;
       cy.log(`Total amount of regions is: ${regionsTotal}`);
       expect(regionsTotal).to.be.greaterThan(10);
+
+      // More simple solution in case no if-statement is needed
+      // cy.wrap($elements).contains('Korea').click();
+
+      cy.wrap($elements).each(($element) => {
+        if ($element.text() === 'Korea') {
+          cy.wrap($element).click();
+        }
+      });
     });
 
     // cy.get(Locators.REGIONS_OPTIONS).its('length').should('be.greaterThan', 10);
@@ -72,10 +81,72 @@ class Test {
   verifyIconUrlIsNotNull(): void {
     cy.request('GET', 'https://api.duckduckgo.com/?q=android&format=json').then((response) => {
       expect(response.status).to.eq(200);
-      const iconURL: string = JSON.parse(response.body).RelatedTopics[0].Icon.URL;
-      if (JSON.stringify(iconURL) != null) {
-        cy.log(iconURL);
+
+      const responseBody = JSON.parse(response.body);
+
+      let arrayLength: number = responseBody.RelatedTopics.length;
+      cy.log(`Array length for RelatedTopics is: ${arrayLength}`);
+
+      let iconURL: string = '';
+      let strippedIconURL: string = '';
+      const iconsURLArray: string[] = [];
+
+      for (let i = 0; i < arrayLength; i++) {
+        iconURL = responseBody.RelatedTopics[i].Icon?.URL;
+
+        if (iconURL != '' && iconURL != undefined) {
+          strippedIconURL = iconURL.replace(/\/i\/|\.[^/.]+$/g, '');
+          cy.log(`${i}: ${strippedIconURL}`);
+          iconsURLArray.push(strippedIconURL);
+        }
+
+        if (i === 3) {
+          const arrayLength3 = responseBody.RelatedTopics[i].Topics.length;
+          cy.log(`Array length for object ${i} is: ${arrayLength3}`);
+
+          for (let j = 0; j < arrayLength3; j++) {
+            iconURL = responseBody.RelatedTopics[i].Topics[j].Icon.URL;
+
+            if (iconURL != '' && iconURL != undefined) {
+              strippedIconURL = iconURL.replace(/\/i\/|\.[^/.]+$/g, '');
+              cy.log(`${i}: ${strippedIconURL}`);
+              iconsURLArray.push(strippedIconURL);
+            }
+          }
+        } else if (i === 4) {
+          const arrayLength4 = responseBody.RelatedTopics[i].Topics.length;
+          cy.log(`Array length for object ${i} is: ${arrayLength4}`);
+
+          for (let j = 0; j < arrayLength4; j++) {
+            iconURL = responseBody.RelatedTopics[i].Topics[j].Icon.URL;
+
+            if (iconURL != '' && iconURL != undefined) {
+              strippedIconURL = iconURL.replace(/\/i\/|\.[^/.]+$/g, '');
+              cy.log(`${j}: ${strippedIconURL}`);
+              iconsURLArray.push(strippedIconURL);
+            }
+          }
+        } else if (i > 4) {
+          const arrayLength5 = responseBody.RelatedTopics[i].Topics.length;
+          cy.log(`Array length for object ${i} is: ${arrayLength5}`);
+
+          for (let j = 0; j < arrayLength5; j++) {
+            iconURL = responseBody.RelatedTopics[i].Topics[j].Icon.URL;
+
+            if (iconURL != '' && iconURL != undefined) {
+              strippedIconURL = iconURL.replace(/\/i\/|\.[^/.]+$/g, '');
+              cy.log(`${j}: ${strippedIconURL}`);
+              iconsURLArray.push(strippedIconURL);
+            }
+          }
+        }
       }
+
+      cy.log('The sorted list of iconURL is:');
+
+      iconsURLArray.sort().forEach((iconURL) => {
+        cy.log(iconURL);
+      });
     });
   }
 }
