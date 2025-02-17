@@ -2,8 +2,8 @@ import { Locators } from '../locators/test';
 
 class Test {
   /**
-   * @description Searh for the word 'android'
-   * @param word The word to type in search bar
+   * @description Searh for the word 'android'.
+   * @param word The word to type in search bar.
    * @author Emmanuel
    */
   searchForTheWordAndroid(word: string): void {
@@ -18,7 +18,7 @@ class Test {
   }
 
   /**
-   * @description Click on Search button
+   * @description Click on Search button.
    * @author Emmanuel
    */
   clickOnSearchButton(): void {
@@ -26,7 +26,7 @@ class Test {
   }
 
   /**
-   * @description Verify that each title in the results page contains the word 'Android'
+   * @description Verify that each title in the results page contains the word 'Android'.
    * @author Emmanuel
    */
   verifyEachTitleContainsWordAndroid(): void {
@@ -50,7 +50,7 @@ class Test {
   }
 
   /**
-   * @description Verify all regions dropdown values is greater than 10
+   * @description Verify all regions dropdown values is greater than 10.
    * @author Emmanuel
    */
   verifyAllRegionsTotalAmount(): void {
@@ -75,7 +75,7 @@ class Test {
   }
 
   /**
-   * @description Verify if icon URL value in response it's not null and print the value
+   * @description Verify if icon URL value in response it's not null and print the value.
    * @author Emmanuel
    */
   verifyIconUrlIsNotNull(): void {
@@ -95,8 +95,7 @@ class Test {
         iconURL = responseBody.RelatedTopics[i].Icon?.URL;
 
         if (iconURL != '' && iconURL != undefined) {
-          strippedIconURL = iconURL.replace(/\/i\/|\.[^/.]+$/g, '');
-          cy.log(`${i}: ${strippedIconURL}`);
+          strippedIconURL = this.printIconUrl(iconURL, i);
           iconsURLArray.push(strippedIconURL);
         }
 
@@ -108,8 +107,7 @@ class Test {
             iconURL = responseBody.RelatedTopics[i].Topics[j].Icon.URL;
 
             if (iconURL != '' && iconURL != undefined) {
-              strippedIconURL = iconURL.replace(/\/i\/|\.[^/.]+$/g, '');
-              cy.log(`${i}: ${strippedIconURL}`);
+              strippedIconURL = this.printIconUrl(iconURL, j);
               iconsURLArray.push(strippedIconURL);
             }
           }
@@ -121,8 +119,7 @@ class Test {
             iconURL = responseBody.RelatedTopics[i].Topics[j].Icon.URL;
 
             if (iconURL != '' && iconURL != undefined) {
-              strippedIconURL = iconURL.replace(/\/i\/|\.[^/.]+$/g, '');
-              cy.log(`${j}: ${strippedIconURL}`);
+              strippedIconURL = this.printIconUrl(iconURL, j);
               iconsURLArray.push(strippedIconURL);
             }
           }
@@ -134,8 +131,7 @@ class Test {
             iconURL = responseBody.RelatedTopics[i].Topics[j].Icon.URL;
 
             if (iconURL != '' && iconURL != undefined) {
-              strippedIconURL = iconURL.replace(/\/i\/|\.[^/.]+$/g, '');
-              cy.log(`${j}: ${strippedIconURL}`);
+              strippedIconURL = this.printIconUrl(iconURL, j);
               iconsURLArray.push(strippedIconURL);
             }
           }
@@ -148,6 +144,20 @@ class Test {
         cy.log(iconURL);
       });
     });
+  }
+
+  /**
+   * @description Print icon Url and return its value.
+   * @param iconURL - The iconURL to be printed.
+   * @param index - The index of the iconURL being printed in the array.
+   * @returns The iconURL string value without the /i/ and the extension.
+   * @author Emmanuel
+   */
+  printIconUrl(iconURL: string, index: number): string {
+    const strippedIconURL = iconURL.replace(/\/i\/|\.[^/.]+$/g, '');
+    cy.log(`${index}: ${strippedIconURL}`);
+
+    return strippedIconURL;
   }
 }
 
